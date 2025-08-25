@@ -13,7 +13,7 @@ import TheWelcome from './components/TheWelcome.vue'
   </header>
 
   <main>
-    <h1>Hola Mundo</h1>
+    <TheWelcome />
   </main>
 </template>
 
