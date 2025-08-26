@@ -33,3 +33,5 @@ coverage
 .env
 .env.local
 .env.*.local
+.scannerwork/report-task.txt
+.scannerwork/.sonar_lock
