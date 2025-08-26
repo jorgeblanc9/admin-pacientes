@@ -1,0 +1,52 @@
+# Componentes Vue - Reglas de Organización
+
+## Ubicación de Componentes
+
+- **`src/components/`** - Componentes reutilizables
+  - `src/components/icons/` - Componentes de iconos
+  - `src/components/ui/` - Componentes de interfaz básicos
+  - `src/components/forms/` - Componentes de formularios
+  - `src/components/layout/` - Componentes de layout
+
+- **`src/views/`** - Vistas/páginas de la aplicación
+  - Cada vista debe corresponder a una ruta específica
+  - Nomenclatura: PascalCase (ej: `UserDashboard.vue`)
+
+## Estructura de Componentes
+
+Los componentes Vue deben seguir esta estructura:
+
+```vue
+<template>
+  <!-- Template aquí -->
+</template>
+
+<script setup>
+// Imports
+// Props
+// Emits
+// Composables
+// Computed
+// Methods
+</script>
+
+<style scoped>
+/* Estilos específicos del componente */
+</style>
+
+## Convenciones de Nomenclatura
+
+- **Componentes**: PascalCase (ej: `UserProfile.vue`, `DataTable.vue`)
+- **Props**: camelCase (ej: `userData`, `isLoading`)
+- **Emits**: kebab-case (ej: `user-updated`, `form-submitted`)
+- **Slots**: kebab-case (ej: `header`, `footer`)
+
+## Imports y Dependencias
+
+- Usar imports relativos para componentes del mismo módulo
+- Usar imports absolutos para componentes de otros módulos
+- Agrupar imports por tipo: Vue, librerías externas, componentes locales
+description:
+globs:
+alwaysApply: true
+---

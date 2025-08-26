@@ -1,0 +1,56 @@
+# Documentación - Reglas de Organización
+
+## Ubicación de Documentación
+
+- **`docs/`** - Toda la documentación del proyecto
+  - Documentación técnica
+  - Guías de configuración
+  - Documentación de API
+  - Guías de desarrollo
+
+## Convenciones de Nomenclatura
+
+- **Archivos de documentación**: UPPER_SNAKE_CASE (ej: `API_DOCUMENTATION.md`)
+- **Nombres descriptivos**: Deben indicar claramente el contenido
+- **Extensión**: Siempre `.md`
+
+## Estructura de Documentación
+
+Cada archivo de documentación debe incluir:
+
+```markdown
+# Título Principal
+
+## Descripción
+Breve descripción del contenido
+
+## Contenido
+- Sección 1
+- Sección 2
+- Sección 3
+
+## Ejemplos
+Código y ejemplos prácticos
+
+## Referencias
+Enlaces a recursos adicionales
+```
+
+## Tipos de Documentación
+
+- **`ENVIRONMENT_*.md`** - Configuración de entorno
+- **`API_*.md`** - Documentación de APIs
+- **`SETUP_*.md`** - Guías de configuración
+- **`TESTING_*.md`** - Guías de testing
+- **`DEPLOYMENT_*.md`** - Guías de despliegue
+
+## Estándares de Calidad
+
+- Usar Markdown estándar
+- Incluir ejemplos de código cuando sea relevante
+- Mantener la documentación actualizada
+- Usar enlaces internos para referenciar otros documentos
+description:
+globs:
+alwaysApply: true
+---

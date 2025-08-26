@@ -1,0 +1,47 @@
+# Organización de Archivos - Admin Pacientes
+
+## Estructura del Proyecto
+
+Este es un proyecto Vue 3 con Vite que sigue una estructura específica. Los archivos deben crearse en sus respectivas carpetas según su tipo:
+
+### Carpetas Principales y Tipos de Archivos
+
+- **`src/`** - Código fuente principal de la aplicación Vue
+  - `src/components/` - Componentes Vue (.vue)
+  - `src/assets/` - Recursos estáticos (CSS, imágenes, iconos)
+  - `src/views/` - Vistas/páginas de la aplicación (.vue)
+  - `src/stores/` - Stores de Pinia (.js)
+  - `src/router/` - Configuración de rutas (.js)
+  - `src/utils/` - Utilidades y helpers (.js)
+  - `src/composables/` - Composables de Vue (.js)
+
+- **`docs/`** - Documentación del proyecto (.md)
+- **`scripts/`** - Scripts de automatización (.sh)
+- **`cypress/`** - Tests end-to-end
+  - `cypress/e2e/` - Tests E2E (.cy.js)
+  - `cypress/fixtures/` - Datos de prueba (.json)
+  - `cypress/support/` - Configuración de soporte (.js)
+
+- **`public/`** - Archivos públicos estáticos
+- **`.vscode/`** - Configuración de VS Code (.json)
+
+### Reglas de Nomenclatura
+
+- **Componentes Vue**: PascalCase (ej: `UserProfile.vue`)
+- **Utilidades**: camelCase (ej: `dateUtils.js`)
+- **Documentación**: UPPER_SNAKE_CASE (ej: `API_DOCUMENTATION.md`)
+- **Scripts**: kebab-case (ej: `setup-environment.sh`)
+
+### Archivos de Configuración
+
+Los archivos de configuración deben estar en la raíz del proyecto:
+- `vite.config.js` - Configuración de Vite
+- `vitest.config.js` - Configuración de Vitest
+- `cypress.config.js` - Configuración de Cypress
+- `eslint.config.js` - Configuración de ESLint
+- `package.json` - Dependencias y scripts
+- `jsconfig.json` - Configuración de JavaScript
+description:
+globs:
+alwaysApply: true
+---

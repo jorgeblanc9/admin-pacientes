@@ -1,0 +1,64 @@
+# Scripts de Automatización - Reglas de Organización
+
+## Ubicación de Scripts
+
+- **`scripts/`** - Todos los scripts de automatización
+  - Scripts de configuración de entorno
+  - Scripts de despliegue
+  - Scripts de testing
+  - Scripts de utilidades
+
+## Convenciones de Nomenclatura
+
+- **Archivos de script**: kebab-case (ej: `setup-environment.sh`)
+- **Nombres descriptivos**: Deben indicar claramente la función
+- **Extensión**: Siempre `.sh` para scripts bash
+
+## Estructura de Scripts
+
+Cada script debe incluir:
+
+```bash
+#!/bin/bash
+
+# Descripción: Breve descripción del script
+# Autor: Nombre del autor
+# Fecha: Fecha de creación
+# Uso: Cómo usar el script
+
+set -e  # Salir en caso de error
+
+# Variables de configuración
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+# Funciones
+function main() {
+    echo "Iniciando script..."
+    # Lógica principal aquí
+}
+
+# Ejecución
+main "$@"
+```
+
+## Tipos de Scripts
+
+- **`setup-*.sh`** - Scripts de configuración inicial
+- **`deploy-*.sh`** - Scripts de despliegue
+- **`test-*.sh`** - Scripts de testing
+- **`build-*.sh`** - Scripts de construcción
+- **`clean-*.sh`** - Scripts de limpieza
+
+## Estándares de Calidad
+
+- Usar `set -e` para salir en caso de error
+- Incluir documentación en el header
+- Usar variables para rutas configurables
+- Implementar logging apropiado
+- Manejar errores de forma robusta
+- Ser idempotentes cuando sea posible
+description:
+globs:
+alwaysApply: true
+---

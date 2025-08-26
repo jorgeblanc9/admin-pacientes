@@ -1,0 +1,67 @@
+# Testing - Reglas de Organización
+
+## Ubicación de Tests
+
+- **`src/**/__tests__/`** - Tests unitarios junto a los componentes
+- **`cypress/e2e/`** - Tests end-to-end (.cy.js)
+- **`cypress/fixtures/`** - Datos de prueba (.json)
+- **`cypress/support/`** - Configuración de soporte (.js)
+
+## Convenciones de Nomenclatura
+
+- **Tests unitarios**: `*.test.js` o `*.spec.js`
+- **Tests E2E**: `*.cy.js`
+- **Fixtures**: `*.json`
+- **Nombres descriptivos**: Deben indicar qué se está probando
+
+## Estructura de Tests Unitarios
+
+```javascript
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
+import ComponentName from './ComponentName.vue'
+
+describe('ComponentName', () => {
+  it('should render correctly', () => {
+    const wrapper = mount(ComponentName)
+    expect(wrapper.exists()).toBe(true)
+  })
+
+  it('should handle user interactions', () => {
+    // Test de interacciones
+  })
+})
+```
+
+## Estructura de Tests E2E
+
+```javascript
+describe('Feature Name', () => {
+  beforeEach(() => {
+    cy.visit('/')
+  })
+
+  it('should perform user workflow', () => {
+    // Test de flujo completo
+  })
+})
+```
+
+## Organización de Tests
+
+- **Tests unitarios**: Junto a los componentes que prueban
+- **Tests de integración**: En carpetas separadas
+- **Tests E2E**: Organizados por funcionalidad
+- **Fixtures**: Datos reutilizables para tests
+
+## Estándares de Testing
+
+- Usar nombres descriptivos para los tests
+- Seguir el patrón AAA (Arrange, Act, Assert)
+- Mantener tests independientes
+- Usar mocks apropiadamente
+- Incluir tests de casos edge
+description:
+globs:
+alwaysApply: true
+---

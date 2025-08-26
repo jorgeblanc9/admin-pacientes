@@ -1,0 +1,69 @@
+# Assets y Recursos Estáticos - Reglas de Organización
+
+## Ubicación de Assets
+
+- **`src/assets/`** - Assets que requieren procesamiento
+  - `src/assets/css/` - Estilos CSS/SCSS
+  - `src/assets/images/` - Imágenes optimizadas
+  - `src/assets/icons/` - Iconos SVG
+  - `src/assets/fonts/` - Fuentes personalizadas
+
+- **`public/`** - Assets estáticos que no requieren procesamiento
+  - `public/images/` - Imágenes estáticas
+  - `public/favicon.ico` - Favicon
+  - `public/manifest.json` - Web App Manifest
+
+## Convenciones de Nomenclatura
+
+- **Archivos CSS**: kebab-case (ej: `main-styles.css`)
+- **Imágenes**: kebab-case (ej: `user-avatar.png`)
+- **Iconos**: kebab-case (ej: `arrow-right.svg`)
+- **Fuentes**: kebab-case (ej: `roboto-regular.woff2`)
+
+## Tipos de Assets
+
+### CSS/SCSS
+- **`base.css`** - Estilos base y reset
+- **`main.css`** - Estilos principales
+- **`components.css`** - Estilos de componentes
+- **`utilities.css`** - Clases utilitarias
+
+### Imágenes
+- **Formatos preferidos**: SVG, WebP, PNG
+- **Optimización**: Comprimir antes de incluir
+- **Responsive**: Proporcionar múltiples tamaños cuando sea necesario
+
+### Iconos
+- **Formato**: SVG preferido
+- **Optimización**: Minimizar código SVG
+- **Nomenclatura**: Descriptiva del icono
+
+## Estructura de CSS
+
+```css
+/* Variables CSS */
+:root {
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+}
+
+/* Estilos base */
+* {
+  box-sizing: border-box;
+}
+
+/* Componentes específicos */
+.component-name {
+  /* Estilos aquí */
+}
+```
+
+## Imports y Uso
+
+- Importar CSS en `main.js` o en componentes específicos
+- Usar rutas relativas para assets locales
+- Usar rutas absolutas para assets públicos
+description:
+globs:
+alwaysApply: true
+---

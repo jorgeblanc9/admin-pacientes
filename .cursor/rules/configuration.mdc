@@ -1,0 +1,84 @@
+# Archivos de Configuración - Reglas de Organización
+
+## Ubicación de Configuración
+
+- **Raíz del proyecto** - Archivos de configuración principales
+- **`.vscode/`** - Configuración específica de VS Code
+- **`cypress/`** - Configuración de Cypress
+
+## Archivos de Configuración Principales
+
+### Vite
+
+- **`vite.config.js`** - Configuración de Vite
+- **`index.html`** - Punto de entrada HTML
+
+### Testing
+
+- **`vitest.config.js`** - Configuración de Vitest
+- **`cypress.config.js`** - Configuración de Cypress
+
+### Linting y Formateo
+
+- **`eslint.config.js`** - Configuración de ESLint
+- **`.prettierrc.json`** - Configuración de Prettier
+- **`.editorconfig`** - Configuración del editor
+
+### JavaScript
+
+- **`jsconfig.json`** - Configuración de JavaScript
+- **`package.json`** - Dependencias y scripts
+
+### Entorno
+
+- **`.env`** - Variables de entorno (no committear)
+- **`.env.example`** - Ejemplo de variables de entorno
+- **`.nvmrc`** - Versión de Node.js
+
+## Estructura de Configuración
+
+### Vite Config
+
+```javascript
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+export default defineConfig({
+  plugins: [vue()],
+  // Configuración adicional
+})
+```
+
+### ESLint Config
+
+```javascript
+import js from '@eslint/js'
+import globals from 'globals'
+
+export default [
+  js.configs.recommended,
+  {
+    languageOptions: {
+      globals: globals.browser,
+    },
+  },
+]
+```
+
+## Convenciones
+
+- **Archivos de configuración**: camelCase para propiedades
+- **Variables de entorno**: UPPER_SNAKE_CASE
+- **Comentarios**: Explicar configuraciones complejas
+- **Documentación**: Incluir ejemplos cuando sea necesario
+
+## Seguridad
+
+- **Nunca committear**: `.env` con valores reales
+- **Siempre incluir**: `.env.example` con estructura
+- **Validar**: Variables de entorno requeridas
+  description:
+  globs:
+  alwaysApply: true
+
+---
