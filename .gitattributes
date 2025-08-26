@@ -1,1 +1,81 @@
+# Configuración global para todos los archivos
 * text=auto eol=lf
+
+# Archivos de código fuente
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.vue text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.sass text eol=lf
+*.less text eol=lf
+*.html text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+*.fish text eol=lf
+
+# Archivos de configuración
+*.config.js text eol=lf
+*.config.ts text eol=lf
+*.config.json text eol=lf
+.eslintrc* text eol=lf
+.prettierrc* text eol=lf
+.babelrc* text eol=lf
+.postcssrc* text eol=lf
+.editorconfig text eol=lf
+.gitattributes text eol=lf
+.gitignore text eol=lf
+.gitkeep text eol=lf
+
+# Archivos binarios (no convertir)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary
+*.rar binary
+*.7z binary
+
+# Archivos de documentación
+*.txt text eol=lf
+*.log text eol=lf
+*.sql text eol=lf
+
+# Archivos de configuración de IDE
+.vscode/* text eol=lf
+.idea/* text eol=lf
+*.sublime-* text eol=lf
+
+# Archivos de testing
+*.test.js text eol=lf
+*.spec.js text eol=lf
+*.test.ts text eol=lf
+*.spec.ts text eol=lf
+*.test.vue text eol=lf
+*.spec.vue text eol=lf
+
+# Archivos de build y distribución
+dist/* binary
+build/* binary
+coverage/* text eol=lf
+
+# Archivos de lock (mantener exactos)
+package-lock.json text eol=lf
+yarn.lock text eol=lf
+pnpm-lock.yaml text eol=lf
