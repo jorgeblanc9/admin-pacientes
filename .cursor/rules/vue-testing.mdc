@@ -1,0 +1,127 @@
+# Vue 3 Testing Rules with Vitest
+
+## Testing Framework Selection
+- **Primary**: Use Vitest for all testing needs in Vue 3 + Vite projects
+- **Rationale**: Native Vite integration, superior performance, Jest-compatible API
+- **Alternative**: Only consider Jest if team has extensive experience
+
+## Project Structure
+Follow this testing directory structure:
+```
+src/
+├── components/
+│   ├── ComponentName.vue
+│   └── __tests__/
+│       └── ComponentName.test.js
+├── composables/
+│   ├── useComposable.js
+│   └── __tests__/
+│       └── useComposable.test.js
+├── utils/
+│   ├── helpers.js
+│   └── __tests__/
+│       └── helpers.test.js
+└── __tests__/
+    ├── setup.js
+    └── mocks/
+
+docs/
+├── testing-strategy.md      # Testing strategy and approach
+├── TESTING.md              # Testing implementation guide
+└── vitest-setup-summary.md # Vitest configuration summary
+```
+
+## Node.js Version Management
+**IMPORTANT**: Always ensure correct Node.js version before installing dependencies:
+```bash
+export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm use
+```
+
+## Required Dependencies
+Always include these testing dependencies:
+```json
+{
+  "devDependencies": {
+    "vitest": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "@vue/test-utils": "^2.4.0",
+    "jsdom": "^23.0.0"
+  }
+}
+```
+
+## Package.json Scripts
+Include these testing scripts:
+```json
+{
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest --watch"
+  }
+}
+```
+
+## Vite Configuration
+Configure testing in [vite.config.js](mdc:vite.config.js):
+```javascript
+export default defineConfig({
+  plugins: [vue()],
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/__tests__/setup.js']
+  }
+})
+```
+
+## Component Testing Patterns
+- Use `mount()` for full component testing
+- Use `shallowMount()` for isolated component testing
+- Always test props, events, and computed properties
+- Mock external dependencies and API calls
+
+## Test File Naming
+- Use `.test.js` or `.test.ts` extension
+- Place test files in `__tests__` directories next to source files
+- Name test files to match source file names
+
+## Coverage Requirements
+- Minimum coverage: 80%
+- Target coverage: 90%
+- Exclude: node_modules, test files, type definitions
+
+## Testing Best Practices
+1. Write tests before implementation (TDD)
+2. Test user interactions, not implementation details
+3. Use descriptive test names
+4. Group related tests with `describe` blocks
+5. Mock external dependencies consistently
+6. Test error scenarios and edge cases
+
+## Vue Test Utils Usage
+- Import from `@vue/test-utils`
+- Use `mount()` for full component rendering
+- Use `shallowMount()` for isolated testing
+- Test props with `props` option
+- Test events with `emitted()` method
+- Use `find()` and `findAll()` for DOM queries
+
+## Performance Guidelines
+- Test execution time: < 30 seconds for full suite
+- Use parallel test execution
+- Memory usage: < 500MB for test suite
+- Enable hot reload during development
+
+## CI/CD Integration
+- Run tests on every pull request
+- Include coverage reporting
+- Fail builds on test failures
+- Use pre-commit hooks for local testing
+description:
+globs:
+alwaysApply: false
+---

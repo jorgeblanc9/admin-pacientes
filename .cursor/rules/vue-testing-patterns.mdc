@@ -1,0 +1,231 @@
+# Patrones de Testing para Vue.js
+
+## Configuración de Testing
+
+### Archivos de Configuración
+- [vitest.config.js](mdc:vitest.config.js) - Configuración de Vitest
+- [cypress.config.js](mdc:cypress.config.js) - Configuración de Cypress
+
+## Patrones para Componentes Vue
+
+### 1. Testing de Props
+```javascript
+describe('Componente', () => {
+  it('debe renderizar props correctamente', () => {
+    const wrapper = mount(Componente, {
+      props: {
+        titulo: 'Mi Título',
+        activo: true
+      }
+    })
+    
+    expect(wrapper.text()).toContain('Mi Título')
+    expect(wrapper.classes()).toContain('activo')
+  })
+})
+```
+
+### 2. Testing de Eventos
+```javascript
+describe('Componente', () => {
+  it('debe emitir evento al hacer click', async () => {
+    const wrapper = mount(Componente)
+    
+    await wrapper.find('[data-testid="mi-boton"]').trigger('click')
+    
+    expect(wrapper.emitted('mi-evento')).toBeTruthy()
+    expect(wrapper.emitted('mi-evento')[0]).toEqual(['valor'])
+  })
+})
+```
+
+### 3. Testing de Slots
+```javascript
+describe('Componente', () => {
+  it('debe renderizar slot content', () => {
+    const wrapper = mount(Componente, {
+      slots: {
+        default: '<span data-testid="slot-content">Contenido</span>'
+      }
+    })
+    
+    expect(wrapper.find('[data-testid="slot-content"]').exists()).toBe(true)
+  })
+})
+```
+
+### 4. Testing de Computed Properties
+```javascript
+describe('Componente', () => {
+  it('debe calcular valor correctamente', () => {
+    const wrapper = mount(Componente, {
+      props: { valor: 10 }
+    })
+    
+    expect(wrapper.vm.valorCalculado).toBe(20)
+  })
+})
+```
+
+## Patrones para Composables
+
+### Testing de Composables
+```javascript
+// composables/__tests__/useMiComposable.spec.js
+import { describe, it, expect } from 'vitest'
+import { useMiComposable } from '../useMiComposable'
+
+describe('useMiComposable', () => {
+  it('debe retornar estado inicial', () => {
+    const { estado, incrementar } = useMiComposable()
+    
+    expect(estado.value).toBe(0)
+    expect(typeof incrementar).toBe('function')
+  })
+  
+  it('debe incrementar estado', () => {
+    const { estado, incrementar } = useMiComposable()
+    
+    incrementar()
+    expect(estado.value).toBe(1)
+  })
+})
+```
+
+## Patrones para Vuex/Pinia
+
+### Testing de Store
+```javascript
+// store/__tests__/miStore.spec.js
+import { describe, it, expect } from 'vitest'
+import { setActivePinia, createPinia } from 'pinia'
+import { useMiStore } from '../miStore'
+
+describe('MiStore', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+  
+  it('debe tener estado inicial', () => {
+    const store = useMiStore()
+    expect(store.items).toEqual([])
+  })
+  
+  it('debe agregar item', () => {
+    const store = useMiStore()
+    store.agregarItem('nuevo item')
+    expect(store.items).toContain('nuevo item')
+  })
+})
+```
+
+## Patrones para Testing E2E
+
+### Flujos de Usuario Completos
+```javascript
+// cypress/e2e/mi-funcionalidad.cy.js
+describe('Mi Funcionalidad', () => {
+  beforeEach(() => {
+    cy.visit('/mi-ruta')
+  })
+  
+  it('debe completar flujo de registro', () => {
+    // Navegación
+    cy.get('[data-testid="registro-link"]').click()
+    
+    // Llenar formulario
+    cy.get('[data-testid="nombre-input"]').type('Juan')
+    cy.get('[data-testid="email-input"]').type('juan@test.com')
+    cy.get('[data-testid="password-input"]').type('password123')
+    
+    // Enviar formulario
+    cy.get('[data-testid="submit-button"]').click()
+    
+    // Verificar resultado
+    cy.url().should('include', '/dashboard')
+    cy.get('[data-testid="welcome-message"]').should('contain', 'Juan')
+  })
+})
+```
+
+## Data Test IDs Obligatorios
+
+### Elementos que SIEMPRE deben tener data-testid:
+- Botones de acción
+- Campos de formulario
+- Enlaces de navegación
+- Elementos que cambian de estado
+- Mensajes de error/éxito
+
+### Convención de Nombres:
+```vue
+<template>
+  <!-- Formularios -->
+  <input data-testid="email-input" v-model="email" />
+  <button data-testid="submit-button" @click="submit">Enviar</button>
+  
+  <!-- Navegación -->
+  <a data-testid="home-link" href="/">Inicio</a>
+  
+  <!-- Estados -->
+  <div data-testid="loading-spinner" v-if="loading">Cargando...</div>
+  <div data-testid="error-message" v-if="error">{{ error }}</div>
+  
+  <!-- Listas -->
+  <li data-testid="item-0">{{ items[0] }}</li>
+  <li data-testid="item-1">{{ items[1] }}</li>
+</template>
+```
+
+## Mocking y Stubbing
+
+### Mocking de APIs
+```javascript
+// En pruebas unitarias
+import { vi } from 'vitest'
+
+vi.mock('@/api/miApi', () => ({
+  fetchData: vi.fn().mockResolvedValue({ data: 'mock data' })
+}))
+
+// En pruebas E2E
+cy.intercept('GET', '/api/data', { fixture: 'data.json' })
+```
+
+### Mocking de Router
+```javascript
+import { createRouter, createWebHistory } from 'vue-router'
+
+const mockRouter = createRouter({
+  history: createWebHistory(),
+  routes: []
+})
+
+// En el test
+const wrapper = mount(Componente, {
+  global: {
+    plugins: [mockRouter]
+  }
+})
+```
+
+## Cobertura de Testing
+
+### Métricas Mínimas:
+- **Statements**: 80%
+- **Branches**: 80%
+- **Functions**: 80%
+- **Lines**: 80%
+
+### Comandos de Cobertura:
+```bash
+# Ejecutar con cobertura
+npm run test:unit -- --coverage
+
+# Ver reporte
+open coverage/lcov-report/index.html
+```
+description:
+globs:
+alwaysApply: true
+---

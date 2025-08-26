@@ -1,0 +1,140 @@
+# Vitest Configuration Rules
+
+## Node.js Version Management
+**IMPORTANT**: Always ensure correct Node.js version before configuration:
+```bash
+export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm use
+```
+
+## Vite Config Integration
+Always configure Vitest in [vite.config.js](mdc:vite.config.js) or [vite.config.ts](mdc:vite.config.ts):
+
+For detailed testing documentation, see [docs/testing-strategy.md](mdc:docs/testing-strategy.md) and [docs/TESTING.md](mdc:docs/TESTING.md).
+
+```javascript
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+export default defineConfig({
+  plugins: [vue()],
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/__tests__/setup.js'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        'node_modules/',
+        'src/__tests__/',
+        '**/*.d.ts',
+        'dist/',
+        'coverage/'
+      ]
+    }
+  }
+})
+```
+
+## Test Environment Setup
+Create [src/__tests__/setup.js](mdc:src/__tests__/setup.js) for global test configuration:
+
+```javascript
+import { config } from '@vue/test-utils'
+
+// Global Vue Test Utils configuration
+config.global.stubs = {
+  // Global component stubs
+}
+
+// Global test utilities
+global.ResizeObserver = class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+```
+
+## Test File Structure
+Follow this pattern for test files:
+
+```javascript
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { mount, shallowMount } from '@vue/test-utils'
+import ComponentName from '../ComponentName.vue'
+
+describe('ComponentName', () => {
+  let wrapper
+
+  beforeEach(() => {
+    wrapper = mount(ComponentName, {
+      props: {
+        // default props
+      }
+    })
+  })
+
+  it('should render correctly', () => {
+    expect(wrapper.exists()).toBe(true)
+  })
+
+  it('should emit events correctly', async () => {
+    await wrapper.find('button').trigger('click')
+    expect(wrapper.emitted('click')).toBeTruthy()
+  })
+})
+```
+
+## Mocking Guidelines
+- Use `vi.mock()` for module mocking
+- Use `vi.fn()` for function mocking
+- Use `vi.spyOn()` for method spying
+- Mock external dependencies consistently
+
+## Coverage Configuration
+Configure coverage in vite.config.js:
+```javascript
+test: {
+  coverage: {
+    provider: 'v8',
+    reporter: ['text', 'json', 'html'],
+    exclude: [
+      'node_modules/',
+      'src/__tests__/',
+      '**/*.d.ts',
+      'dist/',
+      'coverage/',
+      '*.config.js',
+      '*.config.ts'
+    ],
+    thresholds: {
+      global: {
+        branches: 80,
+        functions: 80,
+        lines: 80,
+        statements: 80
+      }
+    }
+  }
+}
+```
+
+## Performance Optimization
+- Use `test.concurrent()` for parallel test execution
+- Use `test.beforeAll()` for expensive setup
+- Use `test.afterAll()` for cleanup
+- Mock heavy operations and external APIs
+
+## TypeScript Support
+For TypeScript projects, ensure proper type checking:
+```javascript
+test: {
+  globals: true,
+  environment: 'jsdom',
+  setupFiles: ['./src/__tests__/setup.ts']
+}
+```
+description:
+globs:
+alwaysApply: false
+---

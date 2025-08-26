@@ -1,0 +1,317 @@
+# Shell Scripts Organization Rules
+
+## File Location Requirements
+- **All shell scripts (.sh files) MUST be stored in the `script/` directory**
+- **Never create shell scripts in the root directory or other locations**
+- **Use descriptive names for shell scripts**
+
+## Directory Structure
+```
+script/
+├── dev.sh           # Development environment script
+├── test.sh          # Testing script with multiple modes
+├── build.sh         # Build script (when needed)
+├── deploy.sh        # Deployment script (when needed)
+└── utils.sh         # Utility functions (when needed)
+```
+
+## Script Naming Conventions
+- **Use kebab-case for script names**: `deploy-production.sh`
+- **Use descriptive names**: `setup-development.sh` not `setup.sh`
+- **Include purpose in name**: `test-coverage.sh`, `build-production.sh`
+- **Use consistent extensions**: Always `.sh`
+
+## Script Standards
+
+### Required Header
+All shell scripts must include this header:
+```bash
+#!/bin/bash
+
+# Script Name: [Descriptive Name]
+# Purpose: [Brief description of what the script does]
+# Author: [Your name or team]
+# Date: [Creation date]
+# Version: [Version number]
+
+set -e  # Exit on any error
+```
+
+### Node.js Version Management
+All scripts must include Node.js version management:
+```bash
+# Load nvm and use correct version
+export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm use
+
+# Verify correct version
+EXPECTED_VERSION="v22.18.0"
+CURRENT_VERSION=$(node --version)
+
+if [ "$CURRENT_VERSION" != "$EXPECTED_VERSION" ]; then
+    echo "❌ Error: Wrong Node.js version detected"
+    echo "   Expected: $EXPECTED_VERSION"
+    echo "   Current:  $CURRENT_VERSION"
+    exit 1
+fi
+```
+
+### Error Handling
+Include proper error handling in all scripts:
+```bash
+# Error handling
+set -e  # Exit on any error
+set -u  # Exit on undefined variables
+
+# Function to handle errors
+error_handler() {
+    echo "❌ Error occurred in script at line $1"
+    exit 1
+}
+
+trap 'error_handler $LINENO' ERR
+```
+
+### Logging and Output
+Use consistent logging format:
+```bash
+# Logging functions
+log_info() {
+    echo "ℹ️  $1"
+}
+
+log_success() {
+    echo "✅ $1"
+}
+
+log_error() {
+    echo "❌ $1"
+}
+
+log_warning() {
+    echo "⚠️  $1"
+}
+```
+
+## Script Categories
+
+### Development Scripts
+- **`dev.sh`**: Development environment setup and start
+- **`dev-setup.sh`**: Initial development environment setup
+- **`dev-reset.sh`**: Reset development environment
+
+### Testing Scripts
+- **`test.sh`**: Main testing script with multiple modes
+- **`test-coverage.sh`**: Coverage-specific testing
+- **`test-watch.sh`**: Watch mode testing
+- **`test-ui.sh`**: UI testing interface
+
+### Build Scripts
+- **`build.sh`**: Production build
+- **`build-dev.sh`**: Development build
+- **`build-analyze.sh`**: Build with bundle analysis
+
+### Deployment Scripts
+- **`deploy.sh`**: Main deployment script
+- **`deploy-staging.sh`**: Staging deployment
+- **`deploy-production.sh`**: Production deployment
+
+### Utility Scripts
+- **`utils.sh`**: Common utility functions
+- **`cleanup.sh`**: Cleanup temporary files
+- **`backup.sh`**: Backup important files
+
+## Script Examples
+
+### Development Script Template
+```bash
+#!/bin/bash
+
+# Script Name: Development Environment
+# Purpose: Start development environment with correct Node.js version
+# Author: Development Team
+# Date: 2024-01-01
+# Version: 1.0.0
+
+set -e
+
+log_info "🚀 Starting Vue 3 + Vite Development Environment"
+
+# Load nvm and use correct Node version
+log_info "📦 Loading Node.js version from .nvmrc..."
+export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm use
+
+# Verify correct version
+EXPECTED_VERSION="v22.18.0"
+CURRENT_VERSION=$(node --version)
+
+if [ "$CURRENT_VERSION" != "$EXPECTED_VERSION" ]; then
+    log_error "Wrong Node.js version detected"
+    log_error "Expected: $EXPECTED_VERSION"
+    log_error "Current:  $CURRENT_VERSION"
+    exit 1
+fi
+
+log_success "Node.js version: $CURRENT_VERSION"
+
+# Check if node_modules exists
+if [ ! -d "node_modules" ]; then
+    log_info "📦 Installing dependencies..."
+    npm install
+else
+    log_success "Dependencies already installed"
+fi
+
+# Start development server
+log_info "🔥 Starting development server..."
+npm run dev
+```
+
+### Testing Script Template
+```bash
+#!/bin/bash
+
+# Script Name: Testing Suite
+# Purpose: Run tests with multiple modes and options
+# Author: Development Team
+# Date: 2024-01-01
+# Version: 1.0.0
+
+set -e
+
+log_info "🧪 Starting Vue 3 + Vite Testing Environment"
+
+# Load nvm and use correct Node version
+log_info "📦 Loading Node.js version from .nvmrc..."
+export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm use
+
+# Verify correct version
+EXPECTED_VERSION="v22.18.0"
+CURRENT_VERSION=$(node --version)
+
+if [ "$CURRENT_VERSION" != "$EXPECTED_VERSION" ]; then
+    log_error "Wrong Node.js version detected"
+    log_error "Expected: $EXPECTED_VERSION"
+    log_error "Current:  $CURRENT_VERSION"
+    exit 1
+fi
+
+log_success "Node.js version: $CURRENT_VERSION"
+
+# Check if node_modules exists
+if [ ! -d "node_modules" ]; then
+    log_info "📦 Installing dependencies..."
+    npm install
+else
+    log_success "Dependencies already installed"
+fi
+
+# Parse command line arguments
+TEST_MODE=${1:-"run"}
+
+case $TEST_MODE in
+    "run")
+        log_info "🏃 Running tests..."
+        npm run test:run
+        ;;
+    "watch")
+        log_info "👀 Running tests in watch mode..."
+        npm run test:watch
+        ;;
+    "ui")
+        log_info "🖥️  Opening test UI..."
+        npm run test:ui
+        ;;
+    "coverage")
+        log_info "📊 Running tests with coverage..."
+        npm run test:coverage
+        ;;
+    *)
+        log_error "Unknown test mode: $TEST_MODE"
+        log_info "Available modes: run, watch, ui, coverage"
+        log_info "Usage: ./script/test.sh [run|watch|ui|coverage]"
+        exit 1
+        ;;
+esac
+```
+
+## Best Practices
+
+### Security
+- **Never use `set +e`** unless absolutely necessary
+- **Validate all inputs** before using them
+- **Use absolute paths** when possible
+- **Check file permissions** before execution
+
+### Performance
+- **Use functions** for reusable code
+- **Minimize external calls** within loops
+- **Use local variables** when possible
+- **Avoid unnecessary subshells**
+
+### Maintainability
+- **Add comments** for complex logic
+- **Use descriptive variable names**
+- **Group related functionality** in functions
+- **Keep scripts focused** on single responsibility
+
+### Portability
+- **Use `/bin/bash`** shebang for bash scripts
+- **Avoid bash-specific features** when possible
+- **Test on different systems** when applicable
+- **Use POSIX-compliant commands** when possible
+
+## Integration with Makefile
+
+### Makefile Integration
+Update Makefile to use scripts from `script/` directory:
+```makefile
+run:
+	export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && \. "$$NVM_DIR/nvm.sh" && nvm use
+	./script/dev.sh
+
+test:
+	export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && \. "$$NVM_DIR/nvm.sh" && nvm use
+	./script/test.sh
+
+test-coverage:
+	export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && \. "$$NVM_DIR/nvm.sh" && nvm use
+	./script/test.sh coverage
+```
+
+## Documentation Requirements
+
+### Script Documentation
+Each script must be documented in the project documentation:
+- **Purpose and usage**
+- **Parameters and options**
+- **Examples of use**
+- **Error handling**
+
+### Update Project Documentation
+When creating new scripts, update:
+- `docs/project-architecture.md`
+- `README.md`
+- Any relevant workflow documentation
+
+## Validation and Testing
+
+### Script Validation
+- **Test all scripts** before committing
+- **Verify error handling** works correctly
+- **Check Node.js version** management
+- **Validate logging** output
+
+### Continuous Integration
+Include script testing in CI/CD:
+```yaml
+# GitHub Actions example
+- name: Test shell scripts
+  run: |
+    chmod +x script/*.sh
+    ./script/test.sh run
+    ./script/dev.sh --help || true
+```
+description:
+globs:
+alwaysApply: false
+---

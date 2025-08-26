@@ -1,0 +1,246 @@
+# Vue Test Utils Best Practices
+
+## Node.js Version Management
+**IMPORTANT**: Always ensure correct Node.js version before running tests:
+```bash
+export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm use
+```
+
+## Import Statements
+Always import Vue Test Utils correctly:
+```javascript
+import { mount, shallowMount, flushPromises } from '@vue/test-utils'
+```
+
+For comprehensive testing documentation, see [docs/TESTING.md](mdc:docs/TESTING.md).
+
+## Component Mounting Patterns
+
+### Full Component Testing
+Use `mount()` for complete component testing:
+```javascript
+const wrapper = mount(ComponentName, {
+  props: { propName: 'value' },
+  global: {
+    plugins: [store, router],
+    stubs: { 'child-component': true }
+  }
+})
+```
+
+### Isolated Component Testing
+Use `shallowMount()` for isolated testing:
+```javascript
+const wrapper = shallowMount(ComponentName, {
+  props: { propName: 'value' }
+})
+```
+
+## Props Testing
+Test component props thoroughly:
+```javascript
+describe('Component Props', () => {
+  it('should render with default props', () => {
+    const wrapper = mount(ComponentName)
+    expect(wrapper.props('title')).toBe('Default Title')
+  })
+
+  it('should render with custom props', () => {
+    const wrapper = mount(ComponentName, {
+      props: { title: 'Custom Title' }
+    })
+    expect(wrapper.props('title')).toBe('Custom Title')
+  })
+})
+```
+
+## Event Testing
+Test component events and emissions:
+```javascript
+describe('Component Events', () => {
+  it('should emit click event', async () => {
+    const wrapper = mount(ComponentName)
+    
+    await wrapper.find('button').trigger('click')
+    
+    expect(wrapper.emitted('click')).toBeTruthy()
+    expect(wrapper.emitted('click')[0]).toEqual([/* expected payload */])
+  })
+
+  it('should emit custom event with data', async () => {
+    const wrapper = mount(ComponentName)
+    
+    await wrapper.vm.$emit('custom-event', { data: 'value' })
+    
+    expect(wrapper.emitted('custom-event')).toBeTruthy()
+    expect(wrapper.emitted('custom-event')[0]).toEqual([{ data: 'value' }])
+  })
+})
+```
+
+## DOM Testing
+Test DOM elements and content:
+```javascript
+describe('DOM Rendering', () => {
+  it('should render text content', () => {
+    const wrapper = mount(ComponentName)
+    expect(wrapper.text()).toContain('Expected Text')
+  })
+
+  it('should render HTML content', () => {
+    const wrapper = mount(ComponentName)
+    expect(wrapper.html()).toContain('<div class="expected-class">')
+  })
+
+  it('should find elements by selector', () => {
+    const wrapper = mount(ComponentName)
+    const element = wrapper.find('.class-name')
+    expect(element.exists()).toBe(true)
+  })
+
+  it('should find multiple elements', () => {
+    const wrapper = mount(ComponentName)
+    const elements = wrapper.findAll('.class-name')
+    expect(elements).toHaveLength(3)
+  })
+})
+```
+
+## Computed Properties Testing
+Test computed properties:
+```javascript
+describe('Computed Properties', () => {
+  it('should compute value correctly', () => {
+    const wrapper = mount(ComponentName, {
+      props: { count: 5 }
+    })
+    
+    expect(wrapper.vm.computedValue).toBe(10)
+  })
+})
+```
+
+## Watchers Testing
+Test watchers and reactive updates:
+```javascript
+describe('Watchers', () => {
+  it('should react to prop changes', async () => {
+    const wrapper = mount(ComponentName, {
+      props: { value: 'initial' }
+    })
+    
+    await wrapper.setProps({ value: 'updated' })
+    
+    expect(wrapper.vm.internalValue).toBe('updated')
+  })
+})
+```
+
+## Async Operations Testing
+Test async operations properly:
+```javascript
+describe('Async Operations', () => {
+  it('should handle async operations', async () => {
+    const wrapper = mount(ComponentName)
+    
+    await wrapper.find('button').trigger('click')
+    await flushPromises()
+    
+    expect(wrapper.vm.loading).toBe(false)
+    expect(wrapper.vm.data).toBeDefined()
+  })
+})
+```
+
+## Global Components and Plugins
+Test components with global dependencies:
+```javascript
+describe('Global Dependencies', () => {
+  it('should work with global components', () => {
+    const wrapper = mount(ComponentName, {
+      global: {
+        components: {
+          'global-component': { template: '<div>Global</div>' }
+        }
+      }
+    })
+    
+    expect(wrapper.find('global-component').exists()).toBe(true)
+  })
+
+  it('should work with plugins', () => {
+    const mockPlugin = {
+      install: vi.fn()
+    }
+    
+    const wrapper = mount(ComponentName, {
+      global: {
+        plugins: [mockPlugin]
+      }
+    })
+    
+    expect(mockPlugin.install).toHaveBeenCalled()
+  })
+})
+```
+
+## Stubs and Mocks
+Use stubs for child components:
+```javascript
+describe('Component Stubs', () => {
+  it('should stub child components', () => {
+    const wrapper = mount(ComponentName, {
+      global: {
+        stubs: {
+          'child-component': {
+            template: '<div data-testid="stubbed-child">Stubbed</div>'
+          }
+        }
+      }
+    })
+    
+    expect(wrapper.find('[data-testid="stubbed-child"]').exists()).toBe(true)
+  })
+})
+```
+
+## Error Testing
+Test error scenarios:
+```javascript
+describe('Error Handling', () => {
+  it('should handle errors gracefully', async () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    
+    const wrapper = mount(ComponentName)
+    
+    // Trigger error condition
+    await wrapper.vm.triggerError()
+    
+    expect(consoleSpy).toHaveBeenCalled()
+    consoleSpy.mockRestore()
+  })
+})
+```
+
+## Cleanup Best Practices
+Always clean up after tests:
+```javascript
+describe('Component Tests', () => {
+  let wrapper
+
+  afterEach(() => {
+    if (wrapper) {
+      wrapper.unmount()
+    }
+  })
+
+  it('should test component', () => {
+    wrapper = mount(ComponentName)
+    // test logic
+  })
+})
+```
+description:
+globs:
+alwaysApply: false
+---

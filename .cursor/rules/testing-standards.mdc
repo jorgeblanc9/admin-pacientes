@@ -1,0 +1,114 @@
+# Estándares de Testing Obligatorios
+
+## Regla Principal: Cada Funcionalidad Debe Tener Pruebas
+
+**Para cada nueva funcionalidad que se implemente, DEBES crear automáticamente:**
+
+1. **Pruebas unitarias con Vitest** en el directorio `__tests__` correspondiente
+2. **Pruebas E2E con Cypress** para flujos de usuario completos
+
+## Estructura de Testing Requerida
+
+### Pruebas Unitarias (Vitest)
+- **Ubicación**: `src/[component|view|composable]/__tests__/[nombre].spec.js`
+- **Cobertura mínima**: 80% del código
+- **Archivos de configuración**: [vitest.config.js](mdc:vitest.config.js)
+
+### Pruebas E2E (Cypress)
+- **Ubicación**: `cypress/e2e/[feature-name].cy.js`
+- **Configuración**: [cypress.config.js](mdc:cypress.config.js)
+
+## Plantillas Obligatorias
+
+### Para Componentes Vue
+```javascript
+// src/components/__tests__/MiComponente.spec.js
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
+import MiComponente from '../MiComponente.vue'
+
+describe('MiComponente', () => {
+  it('debe renderizar correctamente', () => {
+    const wrapper = mount(MiComponente)
+    expect(wrapper.exists()).toBe(true)
+  })
+
+  it('debe emitir eventos correctamente', () => {
+    const wrapper = mount(MiComponente)
+    // Test de eventos
+  })
+
+  it('debe manejar props correctamente', () => {
+    const wrapper = mount(MiComponente, {
+      props: { miProp: 'valor' }
+    })
+    // Test de props
+  })
+})
+```
+
+### Para Pruebas E2E
+```javascript
+// cypress/e2e/mi-funcionalidad.cy.js
+describe('Mi Funcionalidad', () => {
+  beforeEach(() => {
+    cy.visit('/mi-ruta')
+  })
+
+  it('debe completar el flujo principal', () => {
+    // Test del flujo completo
+    cy.get('[data-testid="mi-elemento"]').should('be.visible')
+    cy.get('[data-testid="mi-boton"]').click()
+    // Verificaciones adicionales
+  })
+})
+```
+
+## Comandos de Testing
+
+### Ejecutar Pruebas
+```bash
+# Pruebas unitarias
+npm run test:unit
+
+# Pruebas E2E
+npm run test:e2e
+
+# Pruebas E2E en modo desarrollo
+npm run test:e2e:dev
+```
+
+## Data Test IDs Obligatorios
+
+**Usa siempre `data-testid` para elementos que necesiten ser testeados:**
+
+```vue
+<template>
+  <button data-testid="submit-button" @click="handleSubmit">
+    Enviar
+  </button>
+</template>
+```
+
+## Checklist Obligatorio
+
+Antes de considerar una funcionalidad como "completada":
+
+- [ ] Pruebas unitarias creadas y pasando
+- [ ] Pruebas E2E creadas y pasando
+- [ ] Cobertura de código >= 80%
+- [ ] Data test IDs agregados a elementos clave
+- [ ] Pruebas ejecutadas localmente antes del commit
+
+## Excepciones
+
+Solo se permiten excepciones para:
+- Archivos de configuración
+- Archivos de utilidades muy simples
+- Componentes de presentación sin lógica
+
+**En estos casos, documenta la razón de la excepción en un comentario.**
+description:
+globs:
+alwaysApply: true
+---

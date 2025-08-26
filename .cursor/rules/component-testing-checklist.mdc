@@ -1,0 +1,181 @@
+# Checklist de Testing para Componentes Vue
+
+## Antes de Crear un Componente
+
+### 1. Estructura de Archivos
+- [ ] Crear directorio `__tests__` junto al componente
+- [ ] Crear archivo `[ComponentName].spec.js` en `__tests__`
+- [ ] Crear archivo E2E `[feature-name].cy.js` en `cypress/e2e`
+
+### 2. Data Test IDs Obligatorios
+- [ ] Agregar `data-testid` a todos los elementos interactivos
+- [ ] Agregar `data-testid` a elementos que cambian de estado
+- [ ] Agregar `data-testid` a mensajes de error/éxito
+- [ ] Usar convención: `[elemento]-[accion]` (ej: `submit-button`, `email-input`)
+
+## Testing Unitario Obligatorio
+
+### 3. Props Testing
+- [ ] Test de renderizado con props por defecto
+- [ ] Test de renderizado con props personalizadas
+- [ ] Test de validación de props requeridas
+- [ ] Test de tipos de props (string, number, boolean, object, array)
+
+### 4. Eventos Testing
+- [ ] Test de emisión de eventos al hacer click
+- [ ] Test de emisión de eventos con datos correctos
+- [ ] Test de eventos personalizados
+- [ ] Test de eventos con parámetros
+
+### 5. Slots Testing
+- [ ] Test de slot por defecto
+- [ ] Test de slots nombrados
+- [ ] Test de contenido dinámico en slots
+
+### 6. Computed Properties Testing
+- [ ] Test de propiedades computadas
+- [ ] Test de reactividad de computed
+- [ ] Test de dependencias de computed
+
+### 7. Watchers Testing
+- [ ] Test de watchers reactivos
+- [ ] Test de side effects de watchers
+
+## Testing E2E Obligatorio
+
+### 8. Flujos de Usuario
+- [ ] Test de navegación al componente
+- [ ] Test de interacción completa con el componente
+- [ ] Test de validación de formularios
+- [ ] Test de estados de carga/error/éxito
+
+### 9. Integración
+- [ ] Test de integración con otros componentes
+- [ ] Test de navegación entre páginas
+- [ ] Test de persistencia de datos
+
+## Ejemplos de Implementación
+
+### Componente con Formulario
+```vue
+<!-- MiFormulario.vue -->
+<template>
+  <form @submit.prevent="handleSubmit">
+    <input 
+      data-testid="nombre-input"
+      v-model="form.nombre" 
+      type="text" 
+      required 
+    />
+    <button data-testid="submit-button" type="submit">
+      Enviar
+    </button>
+    <div data-testid="error-message" v-if="error">
+      {{ error }}
+    </div>
+  </form>
+</template>
+```
+
+```javascript
+// __tests__/MiFormulario.spec.js
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
+import MiFormulario from '../MiFormulario.vue'
+
+describe('MiFormulario', () => {
+  it('debe renderizar formulario', () => {
+    const wrapper = mount(MiFormulario)
+    expect(wrapper.find('[data-testid="nombre-input"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="submit-button"]').exists()).toBe(true)
+  })
+
+  it('debe emitir submit con datos correctos', async () => {
+    const wrapper = mount(MiFormulario)
+    
+    await wrapper.find('[data-testid="nombre-input"]').setValue('Juan')
+    await wrapper.find('[data-testid="submit-button"]').trigger('click')
+    
+    expect(wrapper.emitted('submit')).toBeTruthy()
+    expect(wrapper.emitted('submit')[0][0]).toEqual({ nombre: 'Juan' })
+  })
+})
+```
+
+```javascript
+// cypress/e2e/mi-formulario.cy.js
+describe('Mi Formulario', () => {
+  beforeEach(() => {
+    cy.visit('/mi-formulario')
+  })
+
+  it('debe completar flujo de envío', () => {
+    cy.get('[data-testid="nombre-input"]').type('Juan')
+    cy.get('[data-testid="submit-button"]').click()
+    cy.get('[data-testid="success-message"]').should('be.visible')
+  })
+})
+```
+
+## Comandos de Verificación
+
+### Ejecutar Checklist
+```bash
+# 1. Verificar estructura
+ls -la src/components/MiComponente/
+ls -la src/components/MiComponente/__tests__/
+ls -la cypress/e2e/
+
+# 2. Ejecutar pruebas unitarias
+npm run test:unit -- MiComponente
+
+# 3. Ejecutar pruebas E2E
+npm run test:e2e -- --spec "cypress/e2e/mi-componente.cy.js"
+
+# 4. Verificar cobertura
+npm run test:unit -- --coverage
+```
+
+## Métricas de Calidad
+
+### Cobertura Mínima Requerida
+- **Statements**: 80%
+- **Branches**: 80%
+- **Functions**: 80%
+- **Lines**: 80%
+
+### Tiempo de Ejecución
+- **Pruebas unitarias**: < 2 segundos por componente
+- **Pruebas E2E**: < 30 segundos por flujo
+
+## Excepciones Documentadas
+
+Si no se pueden cumplir todos los puntos, documentar:
+
+```javascript
+/**
+ * EXCEPCIÓN DE TESTING:
+ * - Razón: [Explicar por qué no se puede testear]
+ * - Impacto: [Bajo/Medio/Alto]
+ * - Plan de mitigación: [Cómo se compensará]
+ */
+```
+
+## Integración con CI/CD
+
+### Pipeline Obligatorio
+```yaml
+# .github/workflows/test.yml
+- name: Run Unit Tests
+  run: npm run test:unit
+
+- name: Run E2E Tests
+  run: npm run test:e2e
+
+- name: Check Coverage
+  run: npm run test:unit -- --coverage --reporter=text
+```
+description:
+globs:
+alwaysApply: true
+---
